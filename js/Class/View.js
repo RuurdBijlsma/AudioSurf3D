@@ -10,7 +10,7 @@ class View extends Scene {
         this.sphere = new Sphere(this, 0, 0, 3, 0.5, 0x0022d2);
         this.floor = new Cube(this, 0, -1, 0, 20, 1, 20, 0xF0F0F0);
 
-        this.track = new RandomTrack(this, 500, 3, 100, 0.5, 0.01);
+        this.track = new RandomTrack(this, 500, 3, 100, 0, 0.01);
 
         this.lights = {
             ambient: new AmbientLight(this),
