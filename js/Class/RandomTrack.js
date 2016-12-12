@@ -11,21 +11,26 @@ class RandomTrack extends THREE.Group {
 
         this.generateTrack();
         this.generateMeshes();
-        let spline = this.generateSpline();
+        this.spline = this.generateSpline();
 
         scene.add(this);
-        scene.add(spline);
+
+        // this.line = this.createLine();
+        // scene.add(this.line);
+    }
+
+    createLine(subdivision = 5) {
+        let geometry = new THREE.Geometry(),
+            material = new THREE.LineBasicMaterial({ color: 0xff0000 });
+
+        geometry.vertices = this.spline.getPoints(this.spline.points.length * subdivision);
+
+        return new THREE.Line(geometry, material);
     }
 
     generateSpline() {
-        let points = this.notes.map(n => new THREE.Vector3(0, n.intensity * this.maxHeight, n.time)),
-            curve = new THREE.CatmullRomCurve3(points),
-            geometry = new THREE.Geometry(),
-            material = new THREE.LineBasicMaterial({ color: 0xff0000 });
-
-        geometry.vertices = curve.getPoints(points.length * 5);
-
-        return new THREE.Line(geometry, material);
+        let points = this.notes.filter(n => n.index % 2 == 1).map(n => new THREE.Vector3((n.width - 1) / 2, n.intensity * this.maxHeight, n.time));
+        return new THREE.CatmullRomCurve3(points);
     }
 
     generateMeshes() {
@@ -54,14 +59,17 @@ class RandomTrack extends THREE.Group {
 
     generateTrack() {
         let notes = [],
-            prevTime = 0;
+            noteDistance = 2,
+            greyChance = 0.25,
+            emptyChance = 0.35,
+            noteChance = 0.4;
         for (let i = 0; i < this.length; i++) {
             let intensity = this.startIntensity - (this.wildness - Math.random() * (this.wildness * 2)),
                 notePosition = Math.floor(Math.random() * this.width),
-                noteType = Math.floor(Math.random() * 3),
-                time = prevTime + 1,
-                note = new Note(time, this.width, notePosition, noteType, intensity)
-            prevTime = note.time;
+                random = Math.random(),
+                noteType = random < greyChance ? NoteType.GREY : random < greyChance + emptyChance ? NoteType.EMPTY : NoteType.NOTE,
+                note = new Note(i * noteDistance, this.width, notePosition, noteType, intensity);
+            note.index = i;
             this.startIntensity = note.intensity;
 
             this.notes.push(note);

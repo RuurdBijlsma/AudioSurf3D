@@ -2,6 +2,7 @@ class Note {
     constructor(time, width = 3, position = 1, type = NoteType.NOTE, intensity = 0.5) {
         this.types = new Array(width);
         this.time = time;
+        this.width = width;
 
         for (let i = 0; i < width; i++)
             this.types[i] = NoteType.EMPTY;

@@ -4,7 +4,7 @@ class Scene extends THREE.Scene {
         this.main = main;
 
         this.renderElement = renderElement;
-        this.camera = new THREE.PerspectiveCamera(70, this.renderElement.offsetWidth / this.renderElement.offsetHeight, 0.1, 10000);
+        this.camera = new THREE.PerspectiveCamera(30, this.renderElement.offsetWidth / this.renderElement.offsetHeight, 0.1, 10000);
         this.camera.position.set(10, 10, 10);
 
         this.renderer = new THREE.WebGLRenderer({
